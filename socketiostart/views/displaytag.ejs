@@ -1,0 +1,13 @@
+<h1>Latest Item swipped!!!</h1>
+
+<ul>
+
+<%= title %>
+  <% data.forEach(function(dataobj){ %>
+    <li>Name: <%= dataobj.F_Name %> </li>
+    <li>Serving size <%= dataobj.ServingSize %> </li>
+    <li>calories <%= dataobj.Calories %> </li>
+    <li>Calories From Fat <%= dataobj.Cal_From_Fat %> </li>
+  <% }) %>
+
+</ul>

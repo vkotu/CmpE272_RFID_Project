@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<!-- <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script> -->
+<script src="/socket.io/socket.io.js"></script>
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+
+<script>
+  var socket = io.connect('http://localhost');
+  socket.on('news', function (data) {
+    console.log(data);
+    if(data.hello != 'nonewdata'){
+    	console.log('here2');
+    	$('#tag').text(data.hello);
+    	var rows = data.res;
+    	//console.log(rows[0].F_Name);
+    	$('#item').text(rows[0].F_Name);
+    	$('#val1').text(rows[0].ServingSize);
+    	$('#val2').text(rows[0].Calories);
+    	$('#val3').text(rows[0].Cal_From_Fat);
+    	$('#val4').text(rows[0].Total_Fat);
+    	$('#val5').text(rows[0].Tot_Fat_daily_val);
+    	$('#val6').text(rows[0].Sat_Fat);
+    	$('#val7').text(rows[0].Sat_Fat_daily);
+    	$('#val8').text(rows[0].PolyUnSat_Fat);
+    	$('#val9').text(rows[0].Mono_UnSat_Fat);
+    	$('#val10').text(rows[0].Cholestrol);
+    	$('#val11').text(rows[0].Chol_daily_val);
+    	$('#val12').text(rows[0].Sodium);
+    	$('#val13').text(rows[0].Sodium_daily_val);
+    	$('#val14').text(rows[0].Pottasium);
+    	$('#val15').text(rows[0].Pottasium_daily_val);
+    	$('#val16').text(rows[0].Carbohydrates);
+    	$('#val17').text(rows[0].Carbo_daily_val);
+    	$('#val18').text(rows[0].DietaryFiber);
+    	$('#val19').text(rows[0].DFiber_daily_val);
+    	$('#val20').text(rows[0].Sugars);
+    	$('#val21').text(rows[0].Protein);
+    	$('#val22').text(rows[0].Vit_A);
+    	$('#val23').text(rows[0].Vit_C);
+    	$('#val24').text(rows[0].Calicium);
+    	$('#val25').text(rows[0].Iron);
+    	$('#val26').text(rows[0].GoodPoints);
+    	$('#val27').text(rows[0].BadPoints);
+    	//$('#tag').append(data.hello);	
+    }else{
+    	console.log('here');
+    	//$('#tag').text('No New Data');
+    //	$('#tag').append(data.hello);
+    }
+    
+  // socket.emit('my other event', { my: 'data' });
+  });
+</script>
+<div>Swipe your tag now<div id="tag"></div></div>
+<div>Item Swiped<div id="item"></div></div>
+<div>ServingSize:<div id="val1"></div></div>
+<div>Calories:<div id="val2"></div></div>
+<div>Cal_From_Fat:<div id="val3"></div></div>
+<div>Total_Fat:<div id="val4"></div></div>
+<div>Tot_Fat_daily_val:<div id="val5"></div></div>
+<div>Sat_Fat:<div id="val6"></div></div>
+<div>Sat_Fat_daily:<div id="val7"></div></div>
+<div>PolyUnSat_Fat:<div id="val8"></div></div>
+<div>Mono_UnSat_Fat:<div id="val9"></div></div>
+<div>Cholestrol:<div id="val10"></div></div>
+<div>Chol_daily_val:<div id="val11"></div></div>
+<div>Sodium:<div id="val12"></div></div>
+<div>Sodium_daily_val:<div id="val13"></div></div>
+<div>Pottasium:<div id="val14"></div></div>
+<div>Pottasium_daily_val:<div id="val15"></div></div>
+<div>Carbohydrates:<div id="val16"></div></div>
+<div>Carbo_daily_val:<div id="val17"></div></div>
+<div>DietaryFiber:<div id="val18"></div></div>
+<div>DFiber_daily_val:<div id="val19"></div></div>
+<div>Sugars:<div id="val20"></div></div>
+<div>Protein:<div id="val21"></div></div>
+<div>Vit_A:<div id="val22"></div></div>
+<div>Vit_C:<div id="val23"></div></div>
+<div>Calicium:<div id="val24"></div></div>	
+<div>Iron:<div id="val25"></div></div>
+<div>GoodPoints:<div id="val26"></div></div>
+<div>BadPoints:<div id="val27"></div></div>
+</body>
+
+
+</html>
