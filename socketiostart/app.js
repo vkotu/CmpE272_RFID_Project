@@ -54,11 +54,26 @@ function showPortOpen() {
 
 
 function saveLatestData(data) {
+	data = data.replace(/^\n(.*)$/g, '$1');
     if (oldTag != data) {
+    	
         latestData = data;
+        
+        var queryString = "SELECT * FROM t_fooddetails where RFID_Tag = '" + latestData+"'";
+		
+	 	connection.query(queryString, function(err, rows, fields) {
+	 		if (err) throw err;
+	 		if(rows[0]){
+	 			io.emit('news', { hello: latestData, res:rows });
+	 			console.log(rows[0].F_Name);
+	 			oldTag = latestData;
+	 		}	 	    	 	   
+	    });		
+   
+        
     }
     console.log(data);
-    if (oldTag != latestData) {
+/*	if (oldTag != latestData) {
 		//console.log("inside ifs");
 		io.on('connection', function (socket) {
 			console.log('inside connection 1');
@@ -72,35 +87,33 @@ function saveLatestData(data) {
 			console.log('inside connection 2');
 			  socket.emit('news', { hello: 'No New Tag' });
 			  });
-	}
+	}*/
 }
 
 
 io.on('connection', function (socket) {
 	  
-	  var interval = setInterval(function () {
-		  if(oldTag != latestData){
-			  console.log('inside if in io.connetion');
-				var queryString = "SELECT * FROM t_fooddetails where RFID_Tag = '" + latestData+"'";
+	 // var interval = setInterval(function () {
+		 // if(oldTag != latestData){
+			  console.log('Connectinf for first tim');
+				//var queryString = "SELECT * FROM t_fooddetails where RFID_Tag = '" + latestData+"'";
 				
-			 	connection.query(queryString, function(err, rows, fields) {
-			 		if (err) throw err;
+			// 	connection.query(queryString, function(err, rows, fields) {
+			 //		if (err) throw err;
 			 		//results = rows;
 			 		
 			 		//res.render('displaytag.ejs',{title:"Latest Item swiped",data:rows});
-			 		socket.emit('news', { hello: latestData , res:rows});
+			 	//	socket.emit('news', { hello: latestData , res:rows});
 			 		//console.log(rows.length);
 			 		//console.log("name"+rows[0].F_Name);
-			    });				  
+			  //  });				  
 			  
-			  oldTag = latestData;
-			  
-		  }else{
-			  console.log('inside else in io.connetion');
-			  socket.emit('news', { hello: 'nonewdata'});
-		  }
+		 	//}/*else{
+			 // console.log('inside else in io.connetion');
+			  //socket.emit('news', { hello: 'nonewdata'});
+		 // }
 		  
-	    }, 1000);
+	   // }, 1000);
 	  socket.on('my other event', function (data) {
 	    console.log(data);
 	  });
