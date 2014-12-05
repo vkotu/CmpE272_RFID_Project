@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Registration Form </title>
+	<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7; IE=EmulateIE9">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"/>
+    <link rel="stylesheet" type="text/css" href="style.css" media="all" />
+    <link rel="stylesheet" type="text/css" href="demo.css" media="all" />
+
+</head>
+<body >
+<div class="container">
+
+			<header>
+				<h1><span></span> Registration Page</h1>
+				<h2 style="color:red"><%=error%></h2>
+            </header>       
+      <div  class="form">
+    		<form id="" method="post" action="/signup"> 
+    			<p class="contact"><label for="name">Name</label></p> 
+    			<input id="name" name="name" placeholder="First and last name" required="" tabindex="1" type="text"> 
+    			 
+    			<p class="contact"><label for="email">Email</label></p> 
+    			<input id="email" name="email" placeholder="example@domain.com" required="" type="email"> 
+                
+                <p class="contact"><label for="password">Create a password</label></p> 
+    			<input type="password" id="password" name="password" required=""> 
+         
+         
+  
+            <select class="select-style gender" name="gender" id="gender">
+            <option value="f">Female</option>
+		   <option value="m">Male</option>          
+            </select><br><br>
+            
+            <p class="contact"><label for="phone">Calories</label></p> 
+            <input id="maxcal" name="maxcal" placeholder="Max Calories Per Day" required="" type="text"> <br>
+            <button type="submit">sign up</button>	 
+
+</div>      
+</div>
+
+</body>
+</html>
