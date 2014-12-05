@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Can I Have It?</title>
+    <meta name="description" content="" />
+    <meta name="author" content="templatemo">
+    <!-- Favicon-->
+    <link rel="shortcut icon" href="./favicon.png" />		
+    <!-- Bootstrap -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Template  -->
+    <link href="/css/templatemo_style.css" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="http://ccakamai.about.com/include/css/globalcc_css.css?v=1413348749" />
+	<link rel="stylesheet" type="text/css" href="http://ccakamai.about.com/include/css/ccplus_print.css?v=1413348749" media="print" />
+	
+    <script src="/socket.io/socket.io.js"></script>
+	<script>
+	
+window.onload = function() {
+	
+	//alert('hi');
+	$( "#food_data" ).hide();
+	//$('#initial').text('Swipe tag nows');
+	  $("#sendmesg").submit(function( event ) {
+			
+			event.preventDefault();
+			submitreview();
+		});
+	};
+function submitreview(){
+	
+	$('#load').html("<img src='/loading.gif'>");
+	alert('submiting');
+	var name = $('#rname').val();
+	alert(name);
+	var email = $('#remail').val();
+	var subject = $('#rsubject').val();
+	var message = $('#rmessage').val();
+	if(!name || !email || !subject || !message){
+		
+		alert("Please enter all the details!!!");
+		$('#load').html("");
+		return false;
+	}
+	var url = '/savereview?name='+name+'&email='+email+'&subject='+subject+'&message='+message; 
+    $.ajax({
+        url:url,
+        cache: false,
+        async:false,
+        success:function(data) {
+              var respdata = data;
+				if(data = 'success'){
+					$('#load').html("");
+					alert('We received your message. Thank you!!!!');
+					$('#rname').val('');
+					$('#remail').val('');
+					$('#rsubject').val('');
+					$('#rmessage').val('');
+				}
+ 
+        }
+        
+        });
+	
+	
+}
+  var socket = io.connect('http://localhost');
+  socket.on('news', function (data) {
+    console.log(data);
+    if(data.hello != 'nonewdata'){
+    	//alert('new ddata available');
+    	//$('#initial').text('');
+    	$( "#food_data" ).show();	
+    	console.log('here2');
+    	$('#tag').text(data.hello);
+    	var rows = data.res;
+    	//console.log(rows[0].F_Name);
+    	$('#item').text('<h1>'+rows[0].F_Name+'</h1>');
+    	$('#val1').text(rows[0].ServingSize);
+    	$('#val2').text(rows[0].Calories);
+    	$('#val3').text(rows[0].Cal_From_Fat);
+    	$('#val4').text(rows[0].Total_Fat);
+    	$('#val5').text(rows[0].Tot_Fat_daily_val);
+    	$('#val6').text(rows[0].Sat_Fat);
+    	$('#val7').text(rows[0].Sat_Fat_daily);
+    	$('#val8').text(rows[0].PolyUnSat_Fat);
+    	$('#val9').text(rows[0].Mono_UnSat_Fat);
+    	$('#val10').text(rows[0].Cholestrol);
+    	$('#val11').text(rows[0].Chol_daily_val);
+    	$('#val12').text(rows[0].Sodium);
+    	$('#val13').text(rows[0].Sodium_daily_val);
+    	$('#val14').text(rows[0].Pottasium);
+    	$('#val15').text(rows[0].Pottasium_daily_val);
+    	$('#val16').text(rows[0].Carbohydrates);
+    	$('#val17').text(rows[0].Carbo_daily_val);
+    	$('#val18').text(rows[0].DietaryFiber);
+    	$('#val19').text(rows[0].DFiber_daily_val);
+    	$('#val20').text(rows[0].Sugars);
+    	$('#val21').text(rows[0].Protein);
+    	$('#val22').text(rows[0].Vit_A);
+    	$('#val23').text(rows[0].Vit_C);
+    	$('#val24').text(rows[0].Calicium);
+    	$('#val25').text(rows[0].Iron);
+    	$('#val26').text(rows[0].GoodPoints);
+    	$('#val27').text(rows[0].BadPoints);
+    	//$('#tag').append(data.hello);	
+    }else{
+    	console.log('here');
+    	//$('#tag').text('No New Data');
+    //	$('#tag').append(data.hello);
+    }
+    
+  // socket.emit('my other event', { my: 'data' });
+  });
+</script>
+	
+	<script src="/js/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/jquery.easing.1.3.js"></script>
+    <script src="/js/jquery.mobile.customized.min.js"></script>
+    <script src="/js/unslider.min.js"></script>
+    <script src="/js/jquery.singlePageNav.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&amp;sensor=false"></script>
+    <script src="/js/templatemo_script.js"></script>
+<script>
+
+
+</script>
+  </head>
+<body>
+  
+    <div id="templatemo_banner_top" class="container_wapper">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8">
+                    <p class="left" ><font size="4" color="white">Welcome <span id="dname">
+                         <%=first%>
+                                  
+                    </span></font>   </p>
+                </div>
+                <div class="col-md-4">
+                    <p class="right"><a href="/logout">LogOut</a> <span class="glyphicon glyphicon-user"></span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="templatemo_banner_logo" class="container_wapper">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 col-md-8 col-md-offset-4">
+                    <img src="/images/templatemo_logo.png" alt="logo" />
+                    <h1><a href="#">Know what you eat</a></h1><br /><br /><br />
+                    <span></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="banner" id="templatemo_banner_slide">
+        <ul>
+            <li class="templatemo_banner_slide_01">
+                <div class="slide_caption">
+                    <h1></h1>
+                    <p></p>
+                </div>
+            </li>
+            <li class="templatemo_banner_slide_02">
+                <div class="slide_caption">
+                    <h1></h1>
+                    <p> <a rel="nofollow" href="http://www.templatemo.com"></a> </p>
+                </div>
+            </li>
+            <li class="templatemo_banner_slide_03">
+                <div class="slide_caption">
+                    <h1></h1>
+                    <p></p>
+                </div>
+            </li>
+        </ul>
+    </div>    
+
+
+    <div id="templatemo_main_menu" class="container_wapper hidden-sm hidden-xs">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12">
+                    <ul class="nav nav-justified">
+                        <li><a href="#templatemo_banner_top">Home</a></li>
+                        <li><a href="#templatemo_upcomming_event">Food Details</a></li>
+                        <!--<li><a href="#templatemo_pricing">Pricing</a></li>-->
+                        <!--<li><a href="#templatemo_blog">Blog</a></li>-->
+                        <!--<li><a rel="nofollow" href="http://www.templatemo.com/page/1" class="external-link">External</a></li>-->
+                        <li><a href="#templatemo_contact">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id = "food_data">
+    <div id="templatemo_upcomming_event" class="container_wapper">
+           <div class="container">
+           <div class="flog">
+				<div class="flog-left-rail">
+					<div class="food-module">
+						<div class="food-item">
+							<div class="food-photo">
+								<img alt="Apple nutrition data at Calorie Count" src="http://static.caloriecount.about.com/images/medium/apples-157507.jpg">
+							</div>
+							<div style="float:left;width:245px;" class="food-title">
+								<div style="float:left;width:215px;margin-left:20px;" class="food-title-right">
+																		
+								</div>
+								<br>
+								<div class="food-stats">
+									<div class="food-stats-box">
+										<span >A</span>
+										Grade
+									</div>
+								<div class="food-stats-box">
+									<span id ="calor" class="food-stats-cal">116</span>
+									Calories
+								</div>
+								<div class="clear"></div>
+							</div>
+						</div>
+					</div>
+					<div class="clear"></div>
+					<div class="food-nutrition">
+						<div class="nutrition-label">
+				    		<h5>Nutrition Facts</h5>
+				    		<div style="line-height:15px;" align="left">
+				            	Serving Size <span id="val1" class="miniAmt">1</span> 
+				         	</div>
+				    		<div class="r-rail-info-heading" align="left">
+				        		Per Serving <span class="r-rail-d-val">% Daily Value*</span>
+				    		</div>
+				    		<p style="border:0;" class="main"><strong>Calories</strong> <span id="val2" class="miniCal">116</span></p>
+				            <p>Calories from Fat <span id="val3" class="miniCalFat">3</span></p>
+				             <p class="main" ><strong>Total Fat</strong> <span id="val4" class="miniFat">0.4</span>g <span class="r-rail-d-val"><span id="val5" class="miniFatPct">1</span>%</span></p>
+				             <p>Saturated Fat <span id="val6" class="miniSFat">0</span>g <span class="r-rail-d-val"><span id="val7"  class="miniSFatPct">0</span>%</span></p>
+				              <p>Polyunsaturated Fat <span id="val8"   class="miniPFat">0</span>g</p>
+				              <p>Monounsaturated Fat <span id="val9" class="miniMFat">0</span>g</p>
+				               <p class="main"><strong>Cholesterol</strong> <span id="val10"  class="miniChol">0</span>mg <span class="r-rail-d-val"><span id="val11"  class="miniCholPct">0</span>%</span></p>
+				               <p class="main"><strong>Sodium</strong> <span id="val12"  class="miniSodium">2</span>mg <span id="val13"  class="r-rail-d-val"><span class="miniSodiumPct">0</span>%</span></p>
+				               <p class="main"><strong>Potassium</strong> <span id="val14"  class="miniPotassium">238.61</span>mg <span class="r-rail-d-val"><span id="val15" class="miniPotassiumPct">7</span>%</span></p>
+				               <p class="main"><strong>Carbohydrates</strong> <span id="val16" class="miniCarb">30.8</span>g <span class="r-rail-d-val"><span id="val17"  class="miniCarbPct">10</span>%</span></p>
+				               <p>Dietary Fiber <span id="val18"  class="miniFiber">5.4</span>g <span class="r-rail-d-val"><span  id="val19"  class="miniFiberPct">22</span>%</span></p>
+				               <p>Sugars <span id="val20"  class="miniSugar">23.2</span>g</p>
+				               <p class="main"><strong>Protein</strong> <span id="val21" class="miniProtein">0.6</span>g</p>
+				        	<div class="r-rail-info-div"></div>
+				    		<div>
+				            	Vitamin A <span  id="val22" class="miniVitaPct">2</span>% ·
+				                Vitamin C <span id="val23" class="miniVitcPct">17</span>%
+				        	</div>
+				    		<div>
+				            	Calcium <span id="val24" class="miniCalciumPct">1</span>%   ·
+				                Iron <span id="val25" class="miniIronPct">1</span>%
+				        	</div>
+						</div>
+					</div>
+				
+				<div class="based-txt">*Based on a <a href="/cc/2000-calorie-diet.php">2000 calorie diet</a></div>
+										
+				<br>
+
+				</div>
+            </div>
+            
+            <div class='flog-right-rail'>
+            
+            				<h2 style="color:#00b0e3;font-family:Helvetica,Arial,sans-serif;font-weight:bold;font-size:16px;">Apple Calories and Health Benefits</h2>
+				<div class="white-round-box">
+					<div class="analysis-chart-item">
+						<img src="http://caloriecount.about.com/images/dynamic/dailyvals/7/72/72d/9003-food-223.png">
+					</div>	
+					<div class="pie-chart-item">
+						<img src="http://caloriecount.about.com/images/dynamic/breakdown/3/3d/3da/9003-food.png">
+						<div class="analysis-legends">
+							<div class="legend-item">
+								<div style="background:#69A8DD;" class="legend-box"></div>
+								Fat
+								</div>
+								<div class="legend-item">
+									<div style="background:#FFA200;" class="legend-box"></div>
+										Pro
+								</div>
+							<div class="legend-item">
+								<div style="background:#8CBF00;" class="legend-box"></div>
+								Carb
+							</div>
+							<div class="legend-item">
+								<div style="background:#000;" class="legend-box"></div>
+								Alc
+								</div>
+							<div class="clear"></div>
+						</div>
+					</div>
+					<div class="clear"></div>
+				</div>
+					<div class="pros-cons">
+						<ul> 
+							<span>GOOD POINTS</span>
+							<li>No <a data-no_ajx="true" href="/saturated-fat-facts-nf606">saturated fat</a></li>
+							<li>No <a data-no_ajx="true" href="/cholesterol-facts-nf601">cholesterol</a></li>
+							<li>Very low in <a data-no_ajx="true" href="/sodium-facts-nf307">sodium</a></li>
+							<li>High in <a data-no_ajx="true" href="/dietary-fiber-facts-nf291">dietary fiber</a></li>
+							<li>High in <a data-no_ajx="true" href="/vitamin-c-facts-nf401">vitamin C</a></li>
+						</ul>
+						<ul> 
+							<span>BAD POINTS</span>
+							<li>Very high in <a data-no_ajx="true" href="/sugar-facts-nf269">sugar</a></li>
+						</ul>
+						<div class="clear"></div>
+					</div>
+            
+            </div>
+            
+     </div>
+    </div>
+ </div> 
+</div>   
+    <div id="templatemo_contact" class="container_wapper">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 section_header">
+                    <h1>Contact</h1>
+                </div>
+                <div class="col-md-6 col-md-offset-3 col-md-offset-3">
+                    <p>Feel free to send us a message regarding information about food products.</p>
+                </div>
+               
+               
+                <form id= "sendmesg" action="" method="post">
+                    <div class="col-md-4">
+                        <p>Your Name</p>
+                        <input type="text" name="rname" id="rname" placeholder="Full Name" />
+                    </div>
+                    <div class="col-md-4">
+                        <p>Your Email</p>
+                        <input type="text" name="remail" id="remail" placeholder="Your Email" />
+                    </div>
+                    <div class="col-md-4">
+                        <p>Subject</p>
+                        <input type="text" name="rsubject" id="rsubject" placeholder="Subject" />
+                    </div>
+                    <div class="col-xs-12">
+                        <p>Message</p>
+                        <textarea name="rmessage" id="rmessage" placeholder="Your message..." ></textarea>
+                    </div>
+                    <div class="col-md-4 col-xs-8">
+                        <button >Send Message <div id = "load" > </div></button> 
+                    </div> 
+                </form>
+            </div>
+        </div>
+    </div>
+    <div id="templatemo_footer" class="container_wapper">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12">
+                    <p>Copyright © 2014 CMPE-Team27 ALL RIGHTS RESERVED  
+                </div>
+            </div>
+        </div>
+    </div>
+    
+ 
+  </body>
+</html>

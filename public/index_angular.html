@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html ng-app="kotu">
+<head>
+<meta charset="ISO-8859-1">
+<title>Kotu</title>
+</head>
+<body>
+<script src="/socket.io/socket.io.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular.min.js"></script>
+<script>
+var scope;
+var kotu = angular.module('kotu', []);
+
+kotu.controller('info', function ($scope) {
+  scope = $scope;
+  $scope.keys = function(obj){
+	  return obj? Object.keys(obj) : [];
+	}
+});
+  var socket = io.connect('http://localhost');
+  socket.on('news', function (data) {
+    	var rows = data.res;
+    	console.log(rows);
+    	scope.$apply(function(){
+            scope.rows = rows;
+        });
+  });
+</script>
+<div ng-controller="info">
+<div ng-repeat="k in keys(rows[0])">
+<div ng-if="k != 'ID' && k!='$$hashKey'">
+<span>{{ k }}</span>:::<span>{{ rows[0][k] }}</span>
+</div>
+</div>
+<br\>
+<br\>
+<br\>
+<br\>
+<div>HERE - {{rows[0].Calories}}</div>
+</div>
+</body>
+</html>
