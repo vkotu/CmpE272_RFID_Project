@@ -4,15 +4,15 @@
 		<meta charset="UTF-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
 		<meta name="viewport" content="width=device-width, initial-scale=1.0"> 
-        <title>Registration Form</title>
+        <title>Login Form</title>
         <meta name="description" content="Custom Login Form Styling with CSS3" />
         <meta name="keywords" content="css3, login, form, custom, input, submit, button, html5, placeholder" />
         <meta name="author" content="Codrops" />
        
         <link rel="stylesheet" type="text/css" href="/css/style1.css" />
 		<script src="/js/modernizr.custom.63321.js"></script>
-		<script src="/js/jquery-1.9.1.min.js"></script>
-		    	<script src="/js/sweet-alert.js"></script>
+			<script src="/js/jquery-1.9.1.min.js"></script>
+    	<script src="/js/sweet-alert.js"></script>
   		<link rel="stylesheet" href="/css/sweet-alert.css">
 		<!--[if lte IE 7]><style>.main{display:none;} .support-note .note-ie{display:block;}</style><![endif]-->
 		<style>	
@@ -29,8 +29,8 @@
 				text-shadow: 0 1px 1px rgba(0,0,0,0.7);
 			}
 		</style>
+		<script>
 		
-		  		<script>
   		
   		window.onload = function() {
   			
@@ -45,43 +45,29 @@
   				$(location).attr('href',"/");
   			});
   		};
-  		</script>
+		
+		</script>
     </head>
     <body>
         <div class="container">
-				 <form class="form-4"  id ="goback" action=""><p  align="left" >
+						 <form class="form-4"  id ="goback" action=""><p>
 					        <input type="submit" name="submit" value="Go Back To Home" ></p>
 				    </form> 
-				<section class="main">
-				<form class="form-4" method="post" action = "/signup">
-				
-				<h2 style="color:red"><%=error%></h2>
-				    <h1>Sign Up! </h1>
-				 <p>
-				    <label for="name">name</label>
-				        <input type="text" name="name" id="name" placeholder="FirstName LastName" required>
-				    </p>
+			<section class="main">
+				<form class="form-4" method="post" action = "/afterLogin">
+					<h4 style="color:red"><%=error%></h4>
+				    <h1>Login!!</h1>
 				    <p>
 				        <label for="login">username</label>
-				        <input type="text" name="email" id="email" placeholder="username" required>
+				        <input type="text" name="emailid" id="emailid" placeholder="username" required>
 				    </p>
 				    <p>
-				        <label for="password">Create Password</label>
-				        <input type="password" name='password' id="password" placeholder="Create Password" required> 
+				        <label for="password">Password</label>
+				        <input type="password" name='password' id="password" placeholder="Password" required> 
 				    </p>
-				        <p>
-				        <label for="maxcal">Calories</label>
-				        <input type="text" name='maxcal' id="maxcal" placeholder="Set your recommended calorie limit" required> 
-				    </p>
-				         <p>
-				        <label for="gender">Gender</label>Gender:
-						<input type="radio" name="gender" value="male" checked>Male
-						<input type="radio" name="gender" value="female">Female
-						  
-				    </p>
-				    <P></P>
-		  		<p>
-					        <input type="submit" name="submit" value="Continue">
+
+				    <p>
+				        <input type="submit" name="submit" value="Continue">
 				    </p>       
 				</form>​
 			</section>

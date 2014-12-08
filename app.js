@@ -27,6 +27,7 @@ var con = mysql.getConnection();
 var latestData = 0;
 var oldTag = 0;
 var userlogged=0;
+var username=0;
 
 http.listen(3100, function(){
 	  console.log('listening on *:3100');
@@ -35,9 +36,18 @@ http.listen(3100, function(){
 
 
 app.get('/', function(req, res){
-		ejs.renderFile('./views/index_sample.ejs',{disname:'Guest'},function(err,result){
+	
+	var dname = 'Guest'
+		console.log("here");
+		if(req.session.email){
+			userlogged=req.session.email;
+			username = req.session.uname;
+			console.log("here2");
+			dname = username;
+		}
+		ejs.renderFile('./views/index_sample.ejs',{disname:dname,imgurl:''},function(err,result){
 		if(!err){
-			userlogged=0;
+			
 			res.end(result);
 		}
 		else
@@ -54,7 +64,7 @@ app.get('/swipesample', function(req, res){
 
 
 app.get('/registration', function(req, res){
-	ejs.renderFile('./views/registration.ejs',{error:''},function(err,result){	
+	ejs.renderFile('./views/signup.ejs',{error:''},function(err,result){	
 		if(!err){
 			userlogged=0;
 			res.end(result);
@@ -65,14 +75,56 @@ app.get('/registration', function(req, res){
 			console.log(err);
 			}				
 	});
-	});
+});
+app.get('/showupdate', function(req, res){
+	ejs.renderFile('./views/update.ejs',{error:''},function(err,result){	
+		if(!err){
 
+			res.end(result);
+		}
+		else
+			{
+			res.end('An error in file  occured');
+			console.log(err);
+			}				
+	});
+});
+app.get('/showlogin', function(req, res){
+	ejs.renderFile('./views/login.ejs',{error:''},function(err,result){	
+		if(!err){
+
+			res.end(result);
+		}
+		else
+			{
+			res.end('An error in file  occured');
+			console.log(err);
+			}				
+	});
+}); 
+
+app.get('/showcalculate', function(req, res){
+	ejs.renderFile('./views/calculate.html',{error:''},function(err,result){	
+		if(!err){
+
+			res.end(result);
+		}
+		else
+			{
+			res.end('An error in file  occured');
+			console.log(err);
+			}				
+	});
+});
 app.get('/display',displayData);
 app.get('/latest',displayTag);
 app.post('/signup',signUp);
-app.get('/afterLogin',afterLogin);
+app.post('/afterLogin',afterLogin);
 app.get('/savereview',saveReview);
 app.get('/logout',logout);
+app.get('/additem',addItem);
+app.get('/updatedata',updateuserdetails);
+
 
 
 
@@ -109,13 +161,9 @@ io.on('connection', function (socket) {
 function saveLatestData(data) {
 	data = data.replace(/^\n(.*)$/g, '$1');
     if (oldTag != data) {
-    	
+    	//set the new tag swiped to the latest data
         latestData = data;
-        
         var queryString = "SELECT * FROM t_fooddetails where RFID_Tag = '" + latestData+"'";
-        
-        
-	
         con.query(queryString, function(err, rows, fields) {
 	 		if (err) throw err;
 	 		if(rows[0]){
@@ -133,46 +181,21 @@ function saveLatestData(data) {
 	 			var totalcal=0;
 	 			var max_cal;
 	 			console.log(rows[0].F_Name);
+	 			//varimgurl = "/images/"+rows[0].F_Name+".jpg";
+	 			var imgurl = "<img alt='nutrition data at Calorie Count' src=/images/"+rows[0].F_Name+".jpg >";
+	 			var graphpic ="<img  src=/images/"+rows[0].F_Name+"graph.png >"; ;
+	 			var piechartpic = "<img  src=/images/"+rows[0].F_Name+"pie.png >";;  
+	 			console.log(imgurl);
 	 			if(userlogged) {
-	 				userlogged= userlogged.trim();
-	 				console.log("user logged in "+userlogged );
-	 				var qstring = "SELECT dailycount,max_cal FROM t_users where email ='"+userlogged+"'";
-	 								
-	 				
-	 				con.query(qstring, function(err, rows, fields) {
-	 				 		if (err){ throw err;}
-	 				 		else{
-	 				 			
-	 				 			
-	 				 		totalcal = cal+rows[0].dailycount;
-	 				 		max_cal=rows[0].max_cal
-	 				 		console.log("total cal so far"+ totalcal);
-	 				 			if(totalcal>rows[0].dailycount){
-	 				 				console.log("total cal exceeded limit ");
-	 				 				exceeded=1;
-	 				 			}
-	 				 			
-	 				 			var qry = "update t_users set dailycount = "+totalcal+" where email='"+userlogged+"'";
-	 				 			con.query(qry, function(err, rows, fields) {
-	 				 				if (err){ throw err;}
-	 				 				else{
-	 				 					console.log("updated succesfuly");
-	 				 		 			console.log("excede = "+exceeded+"totl"+totalcal);
-	 				 		 			console.log(senddatato);
-	 				 		 			io.emit('news', { hello: latestData, res:senddatato , goodpoints:goodpointsarray,badpoint:badpointsarray,exceeded:exceeded,totalcalconsumed:totalcal,maxcal:max_cal});
-	 				 		 			
-	 				 		 			oldTag = latestData;
-	 				 				}
-	 				 			});
-	 				 			
-	 				 			
-	 				 		}
-	 				    });  
+	 		 		io.emit('news', { newtag: latestData, res:senddatato , goodpoints:goodpointsarray,
+	 		 			badpoint:badpointsarray,askuser:1,email:userlogged,foodname:rows[0].F_Name,imgurl:imgurl,graphpic:graphpic,piechartpic:piechartpic});
+	 		 		oldTag = latestData;
 	 				
 	 			}else{
 	 				var senddatato = rows[0];
 		 			console.log("excede = "+exceeded+"totl"+totalcal);
-		 			io.emit('news', { hello: latestData, res:senddatato , goodpoints:goodpointsarray,badpoint:badpointsarray,exceeded:exceeded,totalcalconsumed:totalcal,maxcal:max_cal});
+		 			io.emit('news', { newtag: latestData, res:senddatato , goodpoints:goodpointsarray,
+		 				badpoint:badpointsarray,askuser:0,email:userlogged,foodname:rows[0].F_Name,imgurl:imgurl,graphpic:graphpic,piechartpic:piechartpic});
 		 			console.log(rows[0].F_Name);
 		 			oldTag = latestData;
 	 			}
@@ -192,42 +215,45 @@ function showPortClose() {
 function showError(error) {
     console.log('Serial port error: ' + error);
 }
-function displayData(req,res){
-	
-	var queryString = 'SELECT * FROM t_fooddetails';
-	con.query(queryString, function(err, rows, fields) {
-	 		if (err) throw err;
-	 		//results = rows;
-	 		res.render('displayallitems.ejs',{title:"List of items available ",data:rows});
-	    });  		
-}
-
-function displayTag(req,res){
-	console.log("presenttag"+latestData);
-	
-	if(latestData){
+function updateuserdetails(req,res){
+	if(!userlogged){
+		console.log('no user logged n');
+		res.send('pleaselogin');
 		
-		console.log("hi");
-	}else{
-		console.log("in else");
-	}
-	
-	if(latestData){
-		console.log(typeof(latestData))
-		var queryString = "SELECT * FROM t_fooddetails where RFID_Tag = '" + latestData+"'";
 		
-			con.query(queryString, function(err, rows, fields) {
-	 		if (err) throw err;
-	 		//results = rows;
-	 		console.log("name"+rows[0].F_Name);
-	 		res.render('displaytag.ejs',{title:"Latest Item swiped",data:rows});
-	    });		
 	}else{
-	res.send("No Item swiped");
+		console.log('usr logged');
+		var emailid =userlogged;
+		console.log(emailid);
+		var maxcal=req.param("maxcal");
+		maxcal=maxcal.trim();
+		maxcal = parseInt(maxcal);
+		var name = req.param("name");
+		name=name.trim();
+		var updateq = "update t_users set max_cal="+maxcal;
+		if(name && name !=''){
+			
+			updateq = updateq+" ,name ='"+ name +"'";
+			req.session.uname = name;
+			username=name;
+		}
+		updateq = updateq+" where email='"+ emailid +"'";
+		console.log("query is : " +updateq );
+		con.query(updateq, function(err,results){
+			if(!err){
+				console.log(results);
+				console.log(req.session.email);
+				
+				res.send('success');
+			}else{
+				console.log(err);
+				res.send('Error occured, please try again');
+			}
+			
+		});		
 	}
-  		
-}
 
+}
 function signUp(req,res)
 {
 	
@@ -239,6 +265,8 @@ function signUp(req,res)
 	password=password.trim();
 	var maxcal=req.param("maxcal");
 	maxcal=maxcal.trim();
+	maxcal = parseInt(maxcal);
+	console.log("type of max cal "+typeof(maxcal));
 	var gender=req.param("gender");
 	gender = gender.trim();
 	var name = req.param("name");
@@ -248,7 +276,7 @@ function signUp(req,res)
 	con.query(getUser, function(err,results){
 		if(results.length>0){
 			
-			ejs.renderFile('./views/registration.ejs',{error:'Email id already exists'},function(err,result){	
+			ejs.renderFile('./views/signup.ejs',{error:'UserName already taken'},function(err,result){	
 				if(!err){	
 					res.end(result);
 				}
@@ -268,9 +296,10 @@ function signUp(req,res)
 			con.query(insert, function(err,result){
 				if(!err){
 					req.session.email=email;
+					req.session.uname = name;
 					userlogged=email;
 					console.log('rendering');
-					ejs.renderFile('./views/index_sample.ejs',{disname:name,error:''},function(err,result){	
+					ejs.renderFile('./views/index_sample.ejs',{disname:name,error:'',imgurl:''},function(err,result){	
 						if(!err){
 //							req.session.email=
 							res.end(result);
@@ -296,11 +325,13 @@ function signUp(req,res)
 	
 	
 }
-	
+
+
+
 function afterLogin(req,res)
 {
 	
-	req.session.email=req.param("emailid");
+	//req.session.email=req.param("emailid");
 	var email=req.param("emailid");
     var password=req.param("password");
 		
@@ -316,8 +347,10 @@ function afterLogin(req,res)
 			var str=JSON.stringify(results[0].time);
 			req.session.email=email;
 			userlogged=email;
+			username=results[0].name;
 			//var jsonparse=JSON.parse(str);
-			ejs.renderFile('./views/index_sample.ejs',{disname:results[0].name,email:results[0].email},function(err,result)
+			req.session.uname = results[0].name;
+			ejs.renderFile('./views/index_sample.ejs',{disname:results[0].name,email:results[0].email,imgurl:''},function(err,result)
 					{
 				if(!err){
 					
@@ -333,20 +366,19 @@ function afterLogin(req,res)
 			}
 		else
 			{
-			res.end("User Name and Password does not match");
-			ejs.renderFile('./views/index_sample.ejs',{},function(err,result){
-				if(!err){
-					
-					res.end(result);
-				}
-				else
-					{
-					res.end('An error in file  occured');
-					console.log(err);
+				ejs.renderFile('./views/login.ejs',{error:'UserName/password does not match'},function(err,result){	
+					if(!err){
+						
+						userlogged=0;
+						username=0;
+						res.end(result);
 					}
-				      
-				
-			});
+					else
+						{
+						res.end('An error in file  occured');
+						console.log(err);
+						}				
+				});
 			console.log(err);
 			}
 		
@@ -389,28 +421,108 @@ function logout(req,res)
 	
 	var emaillogged = req.session.email;
 	req.session.destroy(function(err) {
-			
-		});
-	
-	
-	userlogged=0;
-	ejs.renderFile('./views/index_sample.ejs',{disname:'Guest'},function(err,result){
-		if(!err){
-			
-			res.end(result);
-		}
-		else
-			{
-			res.end('An error in file  occured');
-			console.log(err);
+			if(!err){
+				
+				userlogged=0;
+				username=0;
+				res.send('success');
+				res.end();
+			}else{
+				
+				res.send('error');
+				res.end();
 			}
-	});
-	console.log('user loggd out');
+		});
 	
 }
 
 
-
-
-
+function addItem(req,res){
 	
+	var email = req.param("email");
+	email = email.trim();
+	var totalcal;
+	var max_cal;
+	var dailycount;
+	var caloriestoadd =  req.param("calories");  
+	caloriestoadd = parseInt(caloriestoadd);
+	
+	console.log("type calories to add= "+typeof(caloriestoadd));
+	var exceeded=0;
+	console.log("user logged in " + userlogged);
+	var qstring = "SELECT dailycount,max_cal FROM t_users where email ='"+email+"'";
+	con.query(qstring, function(err, rows, fields) {
+		if (err) {
+			throw err;
+			res.send({success:0});
+			
+		} else {
+			dailycount = parseInt(rows[0].dailycount);
+			console.log("type dailycount  "+typeof(dailycount));
+			
+			totalcal = caloriestoadd + dailycount;
+			console.log("type totalcal  "+typeof(totalcal));
+			max_cal = rows[0].max_cal
+			max_cal = parseInt(max_cal);
+			console.log("type max_cal  "+typeof(max_cal));
+			console.log("total cal so far" + totalcal);
+			if (totalcal > max_cal) {
+				console.log("total cal exceeded limit ");
+				exceeded = 1;
+			}
+
+			var qry = "update t_users set dailycount = " +totalcal+ " where email='" + email + "'";
+			con.query(qry, function(err, rows, fields) {
+				if (err) {
+					throw err;
+					res.send({success:0});
+					
+				} else {
+					console.log("updated succesfuly");
+									
+					var sendata = {success:1,exceeded:exceeded,totalcalconsumed:totalcal,maxcal:max_cal};
+					console.log(sendata);
+					res.send(sendata);
+					
+				}
+			});
+
+		}
+	}); 
+}
+
+function displayData(req,res){
+	
+	var queryString = 'SELECT * FROM t_fooddetails';
+	con.query(queryString, function(err, rows, fields) {
+	 		if (err) throw err;
+	 		//results = rows;
+	 		res.render('displayallitems.ejs',{title:"List of items available ",data:rows});
+	    });  		
+}
+
+function displayTag(req,res){
+	console.log("presenttag"+latestData);
+	
+	if(latestData){
+		
+		console.log("hi");
+	}else{
+		console.log("in else");
+	}
+	
+	if(latestData){
+		console.log(typeof(latestData))
+		var queryString = "SELECT * FROM t_fooddetails where RFID_Tag = '" + latestData+"'";
+		
+			con.query(queryString, function(err, rows, fields) {
+	 		if (err) throw err;
+	 		//results = rows;
+	 		console.log("name"+rows[0].F_Name);
+	 		res.render('displaytag.ejs',{title:"Latest Item swiped",data:rows});
+	    });		
+	}else{
+	res.send("No Item swiped");
+	}
+  		
+}	

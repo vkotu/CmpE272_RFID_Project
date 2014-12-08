@@ -16,7 +16,17 @@
 	<link rel="stylesheet" type="text/css" href="http://ccakamai.about.com/include/css/globalcc_css.css?v=1413348749" />
 	<link rel="stylesheet" type="text/css" href="http://ccakamai.about.com/include/css/ccplus_print.css?v=1413348749" media="print" />
 	<link rel="stylesheet" href="/css/mycustom.css">
+	    	<script src="/js/sweet-alert.js"></script>
+  		<link rel="stylesheet" href="/css/sweet-alert.css">
     <script src="/socket.io/socket.io.js"></script>
+    	<script src="/js/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/jquery.easing.1.3.js"></script>
+    <script src="/js/jquery.mobile.customized.min.js"></script>
+    <script src="/js/unslider.min.js"></script>
+    <script src="/js/jquery.singlePageNav.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&amp;sensor=false"></script>
+    <script src="/js/templatemo_script.js"></script>
 	<script>
 	
 window.onload = function() {
@@ -25,23 +35,20 @@ window.onload = function() {
 	$( "#food_data" ).hide();
 	//$('#initial').text('Swipe tag nows');
 	  $("#sendmesg").submit(function( event ) {
-			
 			event.preventDefault();
 			submitreview();
 		});
 	};
-function submitreview(){
-	
+function submitreview(){	
 	$('#load').html("<img src='/loading.gif'>");
-	alert('submiting');
+	//alert('submiting');
 	var name = $('#rname').val();
-	alert(name);
+	//alert(name);
 	var email = $('#remail').val();
 	var subject = $('#rsubject').val();
 	var message = $('#rmessage').val();
 	if(!name || !email || !subject || !message){
-		
-		alert("Please enter all the details!!!");
+		sweetAlert("Oops!!!", "Please fill all the details",  "error");
 		$('#load').html("");
 		return false;
 	}
@@ -54,7 +61,8 @@ function submitreview(){
               var respdata = data;
 				if(data = 'success'){
 					$('#load').html("");
-					alert('We received your message. Thank you!!!!');
+					sweetAlert("We received your message!!!!", "Thank you!!!", "success");
+				
 					$('#rname').val('');
 					$('#remail').val('');
 					$('#rsubject').val('');
@@ -70,19 +78,24 @@ function submitreview(){
   var socket = io.connect('http://localhost');
   socket.on('news', function (data) {
     console.log(data);
-    if(data.hello != 'nonewdata'){
-    	//alert('new ddata available');
-    	//$('#initial').text('');
     	$( "#food_data" ).show();
-    	
     	console.log('here2');
-    	$('#tag').text(data.hello);
+    	$('#tag').text(data.newtag);
     	var rows = data.res;
-    	
-    	console.log(rows.F_Name);
+    	if(!data.askuser){
+    		
+    	swal({
+			  title: "Got the item!!",
+			  timer: 1000
+			});
+   		
+    	}
+  	console.log(rows.F_Name);
     	$('#item').text('<h1>'+rows.F_Name+'</h1>');
+    	$('#name2').text(rows.F_Name);
     	$('#val1').text(rows.ServingSize);
     	$('#val2').text(rows.Calories);
+    	$('#calor').text(rows.Calories);
     	$('#val3').text(rows.Cal_From_Fat);
     	$('#val4').text(rows.Total_Fat);
     	$('#val5').text(rows.Tot_Fat_daily_val);
@@ -109,49 +122,146 @@ function submitreview(){
     	$('#val25').text(rows.Iron);
     	$('#val26').text(rows.GoodPoints);
     	$('#val27').text(rows.BadPoints);
+    	$('#foodpic').html(data.imgurl);
+    	$('#graphpic').html(data.graphpic);
+    	$('#piechartpic').html(data.piechartpic);
+    	$(window).scrollTop(700);
+    	//alert($('#food_data').offset().top);
+    	//$(window).scrollTop($('#food_data').offset().top);
+    	//$('#food_data')[0].scrollIntoView(true);
     	//alert(data.exceeded);
-    	if(data.exceeded){
-    		alert('You have exceeded the recommended calorie limit '+data.maxcal+' <br/> You have consumed  ' + data.totalcalconsumed+ 'calories so far!!');
-    	}/* else{
-    		alert('You have consumed '+ data.totalcalconsumed+ 'calories so far!!');
-    	} */
-    	//$('#tag').append(data.hello);	
-    }else{
-    	console.log('here');
-    	//$('#tag').text('No New Data');
-    //	$('#tag').append(data.hello);
-    }
-    
+    	if(data.askuser){
+    		//var temp = confirm('Do you wish to add this item in your diet for this day?');
+    		swal({
+    			  title: "Hi!!",
+    			  text: "Do you wish to add this item in your diet for the day?",
+    			  type: "warning",
+    			  showCancelButton: true,
+    			  confirmButtonColor: "green",
+    			 
+    			  confirmButtonText: "Yes, add!!!!",
+    			  cancelButtonText: "No!!!!",
+    			  closeOnConfirm: false,
+    			  closeOnCancel: false
+    			},
+    			function(isConfirm){
+    			  if (isConfirm) {
+    	    			var url = '/additem?calories='+rows.Calories+'&email='+data.email; 
+    	    		    $.ajax({
+    	    		        url:url,
+    	    		        cache: false,
+    	    		        async:false,
+    	    		        success:function(data) {
+    	    		              var respdata = data;
+    	    		           //  alert("sucess"+data.success);
+    	    		              if(data.success){
+    	    		            	  sweetAlert("Item has been successfully added",'You have consumed '+ data.totalcalconsumed +' calories so far for the day!!', "success");
+    	    		            	  
+    	   	    						if(data.exceeded){
+    	   	    							sweetAlert("Item has been successfully added",'You have consumed '+ data.totalcalconsumed +' calories so far for the day!!', "success");
+        	    							swal({
+        	    								  title: 'Hey!!You have exceeded the recommended calorie limit '+data.maxcal+' for the day"',
+        	    								  text: 'You have consumed '+ data.totalcalconsumed +' calories so far for the day!!',
+        	    								  type: "warning",
+        	    								  showCancelButton: false,
+        	    								  confirmButtonColor: "#DD6B55",
+        	    								  confirmButtonText: "Ok!!!",
+        	    								  closeOnConfirm: true
+        	    								});
+        	    						}
+        	    		 
+    	    		            	  
+    	    		              }
+ 
+    	    		        	}
+    	    		        
+    	    		        });	    			   
+    			  } else {
+    				    swal("Cancelled", "Item Has not been added:)", "error");
+    			  }
+    			});
+  	
+    	}
+    	//$('#tag').append(data.newtag);	
+        
   // socket.emit('my other event', { my: 'data' });
   });
+  
+  function logout(){
+	  
+		var url = '/logout'; 
+		swal({
+			  title: "Are you sure you want to logout!??",
+			  text: "",
+			  type: "warning",
+			  showCancelButton: true,
+			  confirmButtonColor: "#DD6B55",
+			  confirmButtonText: "Yes!",
+			  cancelButtonText: "No!",
+			  closeOnConfirm: false,
+			  closeOnCancel: false
+			},
+			function(isConfirm){
+			  if (isConfirm) {
+				    $.ajax({
+				        url:url,
+				        cache: false,
+				        async:false,
+				        success:function(data) {
+				              var respdata = data;
+								if(data = 'success'){
+						  			 swal({
+										  title: "BYE!!!! BYE!!!!!",
+										  timer: 500
+										});
+						  			$(location).attr('href',"/");
+								}else{
+									sweetAlert("Oops!!! Something went wrong",  "error");
+									$(location).attr('href',"/");
+								}
+				 
+				        }
+				        
+				        });
+			  } else {
+		  			 swal({
+						  title: "Ok... I am Going Back!!!!!",
+						  timer: 500
+						});
+			  }
+			});
+  }
 </script>
 	
-	<script src="/js/jquery.min.js"></script>
-    <script src="/js/bootstrap.min.js"></script>
-    <script src="/js/jquery.easing.1.3.js"></script>
-    <script src="/js/jquery.mobile.customized.min.js"></script>
-    <script src="/js/unslider.min.js"></script>
-    <script src="/js/jquery.singlePageNav.min.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&amp;sensor=false"></script>
-    <script src="/js/templatemo_script.js"></script>
+
 <script>
 
 
 </script>
   </head>
-<body>
+<body bgcolor="black">
   
     <div id="templatemo_banner_top" class="container_wapper">
         <div class="container">
             <div class="row">
-                <div class="col-md-8">
+                <div class="col-md-3">
                     <p class="left" ><font size="4" color="white">Welcome <span id="dname"><%=disname%>                 
                     </span></font>   </p>
                 </div>
                 <div class="col-md-4">
-                    <p class="right"><a href="/registration">Sing Up</a> <span class="glyphicon glyphicon-user"></span></p>
-                    <p class="right"><a href="/afterLogin?emailid=vkotu@gmail.com&password=12345">User Login</a> <span class="glyphicon glyphicon-user"></span></p>
-                     <p class="right"><a href="/logout">LogOut</a> <span class="glyphicon glyphicon-user"></span></p>
+                              
+                   
+                    
+					<p class="right"><a href="/showcalculate">Calculate Calorie needs</a> <span class="glyphicon glyphicon-user"></span></p>
+					 <p class="right"><a href="/showlogin">Login</a> <span class="glyphicon glyphicon-user"></span></p>
+					 
+                     <p class="right"><a href="/registration">Sing Up</a> <span class="glyphicon glyphicon-user"></span></p>  
+                       <% if(disname !='Guest'){  %>
+                       <p class="right"><a href="/showupdate">Update</a> <span class="glyphicon glyphicon-user"></span></p>
+                       
+                       <p class="right"><a href="javascript:void(0);" onclick="javascript:logout();">LogOut</a> <span class="glyphicon glyphicon-user"></span></p>
+                       
+                       <% } %>
                 </div>
             </div>
         </div>
@@ -160,8 +270,8 @@ function submitreview(){
         <div class="container">
             <div class="row">
                 <div class="col-xs-12 col-md-8 col-md-offset-4">
-                    <img src="/images/templatemo_logo.png" alt="logo" />
-                    <h1><a href="#">Know what you eat</a></h1><br /><br /><br />
+                    
+                    <h1><a href="#">Know what you eat</a></h1><img src="/images/cal1.jpg" alt="logo" /><br />
                     <span></span>
                 </div>
             </div>
@@ -214,8 +324,9 @@ function submitreview(){
 				<div class="flog-left-rail">
 					<div class="food-module">
 						<div class="food-item">
-							<div class="food-photo">
-								<img alt="Apple nutrition data at Calorie Count" src="http://static.caloriecount.about.com/images/medium/apples-157507.jpg">
+							<div id="foodpic" class="food-photo">
+								<!--  <img alt="nutrition data at Calorie Count" src="http://static.caloriecount.about.com/images/medium/apples-157507.jpg">-->
+								
 							</div>
 							<div style="float:left;width:245px;" class="food-title">
 								<div style="float:left;width:215px;margin-left:20px;" class="food-title-right">
@@ -279,13 +390,13 @@ function submitreview(){
             <div class="flog-left-rail">
             <div class="flog-middle-rail">
             
-            				<h2 style="color:#00b0e3;font-family:Helvetica,Arial,sans-serif;font-weight:bold;font-size:16px;">Apple Calories and Health Benefits</h2>
+            				<h2 style="color:#00b0e3;font-family:Helvetica,Arial,sans-serif;font-weight:bold;font-size:16px;"><span id="name2"></span> Calories and Health Benefits</h2>
 				<div class="white-round-box">
-					<div class="analysis-chart-item">
-						<img src="http://caloriecount.about.com/images/dynamic/dailyvals/7/72/72d/9003-food-223.png">
+					<div id="graphpic" class="analysis-chart-item">
+						
 					</div>	
 					<div class="pie-chart-item">
-						<img src="http://caloriecount.about.com/images/dynamic/breakdown/3/3d/3da/9003-food.png">
+						<span id="piechartpic"  ></span>
 						<div class="analysis-legends">
 							<div class="legend-item">
 								<div style="background:#69A8DD;" class="legend-box"></div>
@@ -311,15 +422,15 @@ function submitreview(){
 					<div class="pros-cons">
 						<ul> 
 							<span>GOOD POINTS</span>
-							<li>No <a data-no_ajx="true" href="/saturated-fat-facts-nf606">saturated fat</a></li>
-							<li>No <a data-no_ajx="true" href="/cholesterol-facts-nf601">cholesterol</a></li>
-							<li>Very low in <a data-no_ajx="true" href="/sodium-facts-nf307">sodium</a></li>
-							<li>High in <a data-no_ajx="true" href="/dietary-fiber-facts-nf291">dietary fiber</a></li>
-							<li>High in <a data-no_ajx="true" href="/vitamin-c-facts-nf401">vitamin C</a></li>
+							<li>No <a data-no_ajx="true" >saturated fat</a></li>
+							<li>No <a data-no_ajx="true" >cholesterol</a></li>
+							<li>Very low in <a data-no_ajx="true" >sodium</a></li>
+							<li>High in <a data-no_ajx="true" >dietary fiber</a></li>
+							<li>High in <a data-no_ajx="true" >vitamin C</a></li>
 						</ul>
 						<ul> 
 							<span>BAD POINTS</span>
-							<li>Very high in <a data-no_ajx="true" href="/sugar-facts-nf269">sugar</a></li>
+							<li>Very high in <a data-no_ajx="true" >sugar</a></li>
 						</ul>
 						<div class="clear"></div>
 					</div>
