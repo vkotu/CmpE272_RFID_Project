@@ -91,6 +91,22 @@ function submitreview(){
    		
     	}
   	console.log(rows.F_Name);
+//  	alert(data.goodpoints[0]);
+		var goodp = data.goodpoints;
+		var badp = data.badpoint;
+		var goodplist='';
+		var badplist='';
+		//alert(goodp.length);
+		for(var i=0; i<goodp.length ; i++){
+			goodplist =goodplist+ "<li>"+goodp[i]+"</li>";
+			//alert(goodplist);
+		}
+		for(var i=0; i<badp.length ; i++){
+			
+			badplist = badplist+"<li>"+badp[i]+"</li>";
+			//alert(badplist);
+		}
+		
     	$('#item').text('<h1>'+rows.F_Name+'</h1>');
     	$('#name2').text(rows.F_Name);
     	$('#val1').text(rows.ServingSize);
@@ -125,6 +141,8 @@ function submitreview(){
     	$('#foodpic').html(data.imgurl);
     	$('#graphpic').html(data.graphpic);
     	$('#piechartpic').html(data.piechartpic);
+    	$('#goodpointlist').html(goodplist);
+		$('#badpointlist').html(badplist);
     	$(window).scrollTop(700);
     	//alert($('#food_data').offset().top);
     	//$(window).scrollTop($('#food_data').offset().top);
@@ -271,7 +289,8 @@ function submitreview(){
             <div class="row">
                 <div class="col-xs-12 col-md-8 col-md-offset-4">
                     
-                    <h1><a href="#">Know what you eat</a></h1><img src="/images/cal1.jpg" alt="logo" /><br />
+                    <h1></h1><img src="/images/cal1.jpg" alt="logo" /><img src="/images/imagescal.jpg" alt="logo" />
+                    <br />
                     <span></span>
                 </div>
             </div>
@@ -281,22 +300,23 @@ function submitreview(){
         <ul>
             <li class="templatemo_banner_slide_01">
                 <div class="slide_caption">
-                    <h1></h1>
+                    <h1> </h1>
                     <p></p>
                 </div>
             </li>
             <li class="templatemo_banner_slide_02">
                 <div class="slide_caption">
-                    <h1></h1>
+                    <h1>By just swipping!!!</h1>
                     <p> <a rel="nofollow" href="http://www.templatemo.com"></a> </p>
                 </div>
             </li>
             <li class="templatemo_banner_slide_03">
                 <div class="slide_caption">
-                    <h1></h1>
+                    <h1>Be an informed consumer!!</h1>
                     <p></p>
                 </div>
             </li>
+                       
         </ul>
     </div>    
 
@@ -325,7 +345,7 @@ function submitreview(){
 					<div class="food-module">
 						<div class="food-item">
 							<div id="foodpic" class="food-photo">
-								<!--  <img alt="nutrition data at Calorie Count" src="http://static.caloriecount.about.com/images/medium/apples-157507.jpg">-->
+								
 								
 							</div>
 							<div style="float:left;width:245px;" class="food-title">
@@ -339,7 +359,7 @@ function submitreview(){
 										Grade
 									</div>
 								<div class="food-stats-box">
-									<span id ="calor" class="food-stats-cal">116</span>
+									<span id ="calor" class="food-stats-cal"></span>
 									Calories
 								</div>
 								<div class="clear"></div>
@@ -351,37 +371,37 @@ function submitreview(){
 						<div class="nutrition-label">
 				    		<h5>Nutrition Facts</h5>
 				    		<div style="line-height:15px;" align="left">
-				            	Serving Size <span id="val1" class="miniAmt">1</span> 
+				            	Serving Size <span id="val1" class="miniAmt"></span> 
 				         	</div>
 				    		<div class="r-rail-info-heading" align="left">
 				        		Per Serving <span class="r-rail-d-val">% Daily Value*</span>
 				    		</div>
-				    		<div align="left"><strong>Calories</strong> <span id="val2" class="miniCal">116</span></div>
-				            <p><div align="left">Calories from Fat <span id="val3" class="miniCalFat">3</span></div></p>
-				             <p class="main" ><div align="left"><strong>Total Fat</strong> <span id="val4" class="miniFat">0.4</span> <span class="r-rail-d-val"><span id="val5" class="miniFatPct">1</span></span></div></p>
-				             <p><div align="left"> Saturated Fat <span id="val6" class="miniSFat">0</span> <span class="r-rail-d-val"><span id="val7"  class="miniSFatPct">0</span>%</span></div></p>
-				              <p><div align="left"> Polyunsaturated Fat <span id="val8"   class="miniPFat">0</span></div></p>
-				              <p><div align="left">Monounsaturated Fat <span id="val9" class="miniMFat">0</span></div></p>
-				               <p class="main"><div align="left"><strong>Cholesterol</strong> <span id="val10"  class="miniChol">0</span> <span class="r-rail-d-val"><span id="val11"  class="miniCholPct">0</span></span></div></p>
-				               <p class="main"><div align="left"><strong>Sodium</strong> <span id="val12"  class="miniSodium">2</span> <span   class="r-rail-d-val"><span id="val13" class="miniSodiumPct">0</span></span></div></p>
-				               <p class="main"><div align="left"><strong>Potassium</strong> <span id="val14"  class="miniPotassium">238.61</span> <span class="r-rail-d-val"><span id="val15" class="miniPotassiumPct">7</span></span></div></p>
-				               <p class="main"><div align="left"><strong>Carbohydrates</strong> <span id="val16" class="miniCarb">30.8</span> <span class="r-rail-d-val"><span id="val17"  class="miniCarbPct">10</span></span></div></p>
-				               <p><div align="left">Dietary Fiber <span id="val18"  class="miniFiber">5.4</span> <span class="r-rail-d-val"><span  id="val19"  class="miniFiberPct">22</span></span></div></p>
-				               <p><div align="left">Sugars <span id="val20"  class="miniSugar">23.2</span></div></p>
-				               <p class="main"><div align="left"><strong>Protein</strong> <span id="val21" class="miniProtein">0.6</span></div></p>
+				    		<div align="left"><strong>Calories</strong> <span id="val2" class="miniCal"></span></div>
+				            <p><div align="left">Calories from Fat <span id="val3" class="miniCalFat"></span></div></p>
+				             <p class="main" ><div align="left"><strong>Total Fat</strong> <span id="val4" class="miniFat"></span> <span class="r-rail-d-val"><span id="val5" class="miniFatPct"></span></span></div></p>
+				             <p><div align="left"> Saturated Fat <span id="val6" class="miniSFat"></span> <span class="r-rail-d-val"><span id="val7"  class="miniSFatPct">0</span>%</span></div></p>
+				              <p><div align="left"> Polyunsaturated Fat <span id="val8"   class="miniPFat"></span></div></p>
+				              <p><div align="left">Monounsaturated Fat <span id="val9" class="miniMFat"></span></div></p>
+				               <p class="main"><div align="left"><strong>Cholesterol</strong> <span id="val10"  class="miniChol"></span> <span class="r-rail-d-val"><span id="val11"  class="miniCholPct"></span></span></div></p>
+				               <p class="main"><div align="left"><strong>Sodium</strong> <span id="val12"  class="miniSodium"></span> <span   class="r-rail-d-val"><span id="val13" class="miniSodiumPct"></span></span></div></p>
+				               <p class="main"><div align="left"><strong>Potassium</strong> <span id="val14"  class="miniPotassium"></span> <span class="r-rail-d-val"><span id="val15" class="miniPotassiumPct"></span></span></div></p>
+				               <p class="main"><div align="left"><strong>Carbohydrates</strong> <span id="val16" class="miniCarb"></span> <span class="r-rail-d-val"><span id="val17"  class="miniCarbPct"></span></span></div></p>
+				               <p><div align="left">Dietary Fiber <span id="val18"  class="miniFiber"></span> <span class="r-rail-d-val"><span  id="val19"  class="miniFiberPct"></span></span></div></p>
+				               <p><div align="left">Sugars <span id="val20"  class="miniSugar"></span></div></p>
+				               <p class="main"><div align="left"><strong>Protein</strong> <span id="val21" class="miniProtein"></span></div></p>
 				        	<div class="r-rail-info-div"></div>
 				    		<div>
-				            	Vitamin A <span  id="val22" class="miniVitaPct">2</span>% ·
-				                Vitamin C <span id="val23" class="miniVitcPct">17</span>%
+				            	Vitamin A <span  id="val22" class="miniVitaPct"></span>% ·
+				                Vitamin C <span id="val23" class="miniVitcPct"></span>%
 				        	</div>
 				    		<div>
-				            	Calcium <span id="val24" class="miniCalciumPct">1</span>%   ·
-				                Iron <span id="val25" class="miniIronPct">1</span>%
+				            	Calcium <span id="val24" class="miniCalciumPct"></span>%   ·
+				                Iron <span id="val25" class="miniIronPct"></span>%
 				        	</div>
 						</div>
 					</div>
 				
-				<div class="based-txt">*Based on a <a href="/cc/2000-calorie-diet.php">2000 calorie diet</a></div>
+				<div class="based-txt">*Based on a 2000 calorie diet</div>
 										
 				<br>
 
@@ -422,15 +442,15 @@ function submitreview(){
 					<div class="pros-cons">
 						<ul> 
 							<span>GOOD POINTS</span>
-							<li>No <a data-no_ajx="true" >saturated fat</a></li>
-							<li>No <a data-no_ajx="true" >cholesterol</a></li>
-							<li>Very low in <a data-no_ajx="true" >sodium</a></li>
-							<li>High in <a data-no_ajx="true" >dietary fiber</a></li>
-							<li>High in <a data-no_ajx="true" >vitamin C</a></li>
+							<span id = "goodpointlist"> 
+							
+							</span>						
 						</ul>
 						<ul> 
 							<span>BAD POINTS</span>
-							<li>Very high in <a data-no_ajx="true" >sugar</a></li>
+							<span id = "badpointlist"> 
+							
+							</span>
 						</ul>
 						<div class="clear"></div>
 					</div>

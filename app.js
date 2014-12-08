@@ -45,7 +45,7 @@ app.get('/', function(req, res){
 			console.log("here2");
 			dname = username;
 		}
-		ejs.renderFile('./views/index_sample.ejs',{disname:dname,imgurl:''},function(err,result){
+		ejs.renderFile('./views/index_sample.ejs',{disname:dname,imgurl:'',goodpoints:[],badpoint:[]},function(err,result){
 		if(!err){
 			
 			res.end(result);
@@ -176,15 +176,15 @@ function saveLatestData(data) {
 	 			if(goodp){goodpointsarray = goodp.split(',');}
 	 			if(badp){badpointsarray = badp.split(',');}
 	 			var cal= rows[0].Calories;
-	 			console.log(userlogged);
+	 			console.log(goodpointsarray);
 	 			var exceeded=0;
 	 			var totalcal=0;
 	 			var max_cal;
 	 			console.log(rows[0].F_Name);
 	 			//varimgurl = "/images/"+rows[0].F_Name+".jpg";
-	 			var imgurl = "<img alt='nutrition data at Calorie Count' src=/images/"+rows[0].F_Name+".jpg >";
-	 			var graphpic ="<img  src=/images/"+rows[0].F_Name+"graph.png >"; ;
-	 			var piechartpic = "<img  src=/images/"+rows[0].F_Name+"pie.png >";;  
+	 			var imgurl = "<img alt='nutrition data at Calorie Count' src='/images/"+rows[0].F_Name+".jpg' >";
+	 			var graphpic ="<img  src='/images/"+rows[0].F_Name+"graph.png' >"; ;
+	 			var piechartpic = "<img  src='/images/"+rows[0].F_Name+"pie.png' >";;  
 	 			console.log(imgurl);
 	 			if(userlogged) {
 	 		 		io.emit('news', { newtag: latestData, res:senddatato , goodpoints:goodpointsarray,
@@ -299,7 +299,7 @@ function signUp(req,res)
 					req.session.uname = name;
 					userlogged=email;
 					console.log('rendering');
-					ejs.renderFile('./views/index_sample.ejs',{disname:name,error:'',imgurl:''},function(err,result){	
+					ejs.renderFile('./views/index_sample.ejs',{disname:name,error:'',imgurl:'',goodpoints:[],badpoint:[]},function(err,result){	
 						if(!err){
 //							req.session.email=
 							res.end(result);
@@ -350,7 +350,7 @@ function afterLogin(req,res)
 			username=results[0].name;
 			//var jsonparse=JSON.parse(str);
 			req.session.uname = results[0].name;
-			ejs.renderFile('./views/index_sample.ejs',{disname:results[0].name,email:results[0].email,imgurl:''},function(err,result)
+			ejs.renderFile('./views/index_sample.ejs',{disname:results[0].name,email:results[0].email,imgurl:'',goodpoints:[],badpoint:[]},function(err,result)
 					{
 				if(!err){
 					
